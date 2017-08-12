@@ -20,7 +20,7 @@ func check_port(host string, start_port, end_port int) {
 	for i := start_port; i <= end_port; i++ {
 		fmt.Println(i)
 		qualified_host := fmt.Sprintf("%s%s%d", host, ":", i)
-		conn, err := net.DialTimeout("tcp", qualified_host, 1*time.Second)  // Got the timeout code from: https://stackoverflow.com/questions/37294052/golang-why-net-dialtimeout-get-timeout-half-of-the-time
+		conn, err := net.DialTimeout("tcp", qualified_host, 50*time.Millisecond)  // Got the timeout code from: https://stackoverflow.com/questions/37294052/golang-why-net-dialtimeout-get-timeout-half-of-the-time
 		if err != nil {
 			fmt.Println(err)
 			continue
