@@ -6,3 +6,6 @@ User runs the app, answers three questions (host to scan, starting port and endi
 
 Note: Only use this tool on sites you have permission to test and always know the legalities of using a port scanner in your territory.
 
+# Performance
+In the current implementation, reading buffers as raw bytes (instead of using the bufio library) I could scan
+8000 ports in about 20 seconds (previously bufio reads were taking over a min to scan 8000 ports.)
