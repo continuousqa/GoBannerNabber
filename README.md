@@ -9,3 +9,6 @@ Note: Only use this tool on sites you have permission to test and always know th
 # Performance
 In the current implementation, reading buffers as raw bytes (instead of using the bufio library) I could scan
 8000 ports in about 20 seconds (previously bufio reads were taking over a min to scan 8000 ports.)
+
+Compared to the Python script, the Go app is about 2x faster - I get about 40s for the python script to scan 8000 ports.
+
