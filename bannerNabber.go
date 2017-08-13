@@ -18,16 +18,18 @@ func main() {
 func check_port(host string, start_port, end_port int) {
 
 	for i := start_port; i <= end_port; i++ {
-		fmt.Println(i)
+		//fmt.Println(i)
 		qualified_host := fmt.Sprintf("%s%s%d", host, ":", i)
 		conn, err := net.DialTimeout("tcp", qualified_host, 50*time.Millisecond)  // Got the timeout code from: https://stackoverflow.com/questions/37294052/golang-why-net-dialtimeout-get-timeout-half-of-the-time
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 			continue
 		}
-		fmt.Fprintf(conn, "GET / HTTP/1.0\r\n\r\n") 
+		fmt.Fprintf(conn, "GET / HTTP/1.0\r\n\r\n1\n22\n\n\n\n")
+		conn.SetReadDeadline(time.Now().Add(50*time.Millisecond))
+
 		status, err := bufio.NewReader(conn).ReadString('\n')
-		fmt.Println(status)
+		fmt.Println(i, status)
 	}
 }
 
