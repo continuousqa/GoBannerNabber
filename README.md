@@ -7,8 +7,6 @@ User runs the app, answers three questions (host to scan, starting port and endi
 Note: Only use this tool on sites you have permission to test and always know the legalities of using a port scanner in your territory.
 
 # Performance
-In the current implementation, reading buffers as raw bytes (instead of using the bufio library) I could scan
-8000 ports in about 20 seconds (previously bufio reads were taking over a min to scan 8000 ports.)
-
-Compared to the Python script, the Go app is about 2x faster - I get about 40s for the python script to scan 8000 ports.
-
+I modified the code a bit to break out a port range into 10 concurrent Go Routines.  This concurrency
+has allowed me to scan a 65,000 port range in about 1min.   I'm not sure where the Go Routine sweet spot would be.
+The number of concurrent Go Routines could be bumped up further (as needed.)
