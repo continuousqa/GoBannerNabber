@@ -1,3 +1,5 @@
+// +build linux, 386, darwin
+
 package main
 
 import (
@@ -48,15 +50,28 @@ func user_input() {
 	//check_port_set1(host, start_port, end_port) // 15s to run 1000 ports sequentially
 
 	port_range := end_port - start_port
-	end_port_set1 := (port_range / 4) + start_port
-	end_port_set2 := (port_range / 4) + end_port_set1
-	end_port_set3 := (port_range / 4) + end_port_set2
+	end_port_set1 := (port_range / 10) + start_port
+	end_port_set2 := (port_range / 10) + end_port_set1
+	end_port_set3 := (port_range / 10) + end_port_set2
+	end_port_set4 := (port_range / 10) + end_port_set3
+	end_port_set5 := (port_range / 10) + end_port_set4
+	end_port_set6 := (port_range / 10) + end_port_set5
+	end_port_set7 := (port_range / 10) + end_port_set6
+	end_port_set8 := (port_range / 10) + end_port_set7
+	end_port_set9 := (port_range / 10) + end_port_set8
 
-	wg.Add(4)		// 3s to run 1000 ports on 4 concurrent groups
+
+	wg.Add(10)		// 3s to run 1000 ports on 4 concurrent groups
 	go check_port(host, start_port, end_port_set1)
 	go check_port(host, (end_port_set1 + 1), end_port_set2)
 	go check_port(host, (end_port_set2 + 1), end_port_set3)
-	go check_port(host, (end_port_set3 + 1), end_port)
+	go check_port(host, (end_port_set3 + 1), end_port_set4)
+	go check_port(host, (end_port_set4 + 1), end_port_set5)
+	go check_port(host, (end_port_set5 + 1), end_port_set6)
+	go check_port(host, (end_port_set6 + 1), end_port_set7)
+	go check_port(host, (end_port_set7 + 1), end_port_set8)
+	go check_port(host, (end_port_set8 + 1), end_port_set9)
+	go check_port(host, (end_port_set9 + 1), end_port)
 	wg.Wait()
 
 }
