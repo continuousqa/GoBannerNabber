@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff5338a9-d75b-4b43-84ed-10bb8d4bc7e5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bannerNabber.go" afterPath="$PROJECT_DIR$/bannerNabber.go" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="bannerNabber.go" pinned="false" current-in-tab="false">
+      <file leaf-file-name="bannerNabber.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bannerNabber.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+            <state relative-caret-position="312">
+              <caret line="74" column="0" lean-forward="true" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
               <folding>
                 <element signature="e#44#84#0" expanded="true" />
               </folding>
@@ -36,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="53" lean-forward="true" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
+            <state relative-caret-position="120">
+              <caret line="8" column="13" lean-forward="true" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -56,8 +56,8 @@
       <list>
         <option value="$PROJECT_DIR$/bannerNabber_windows_intel64.go" />
         <option value="$PROJECT_DIR$/windows/bannerNabber_windows_intel64.go" />
-        <option value="$PROJECT_DIR$/bannerNabber.go" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/bannerNabber.go" />
       </list>
     </option>
   </component>
@@ -389,21 +389,21 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/windows/bannerNabber_windows_intel64.go" />
-    <entry file="file://$PROJECT_DIR$/bannerNabber.go">
+    <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#44#84#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="120">
+          <caret line="8" column="13" lean-forward="true" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
+    <entry file="file://$PROJECT_DIR$/bannerNabber.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="53" lean-forward="true" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
-          <folding />
+        <state relative-caret-position="312">
+          <caret line="74" column="0" lean-forward="true" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+          <folding>
+            <element signature="e#44#84#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

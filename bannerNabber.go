@@ -30,7 +30,6 @@ func check_port(host string, start_port, end_port int) {
 		fmt.Fprintf(conn, "GET / HTTP/1.0\r\n\r\n1\n22\n\n\n\n")
 		conn.SetReadDeadline(time.Now().Add(10*time.Millisecond))
 
-		// swapping bufio reads to reading buffers as bytes gets huge performance increase: 8000 ports in 20s (vs 1min 10s using bufio reads)
 		buff := make([]byte, 1024)
 		n, _ := conn.Read(buff)
 		fmt.Printf("Port: %d%s\n",i, buff[:n])
@@ -47,8 +46,6 @@ func user_input() {
 	fmt.Scan(&end_port)
 	fmt.Println("Running scan... ")
 
-	//check_port_set1(host, start_port, end_port) // 15s to run 1000 ports sequentially
-
 	port_range := end_port - start_port
 	end_port_set1 := (port_range / 10) + start_port
 	end_port_set2 := (port_range / 10) + end_port_set1
@@ -61,7 +58,7 @@ func user_input() {
 	end_port_set9 := (port_range / 10) + end_port_set8
 
 
-	wg.Add(10)		// 3s to run 1000 ports on 4 concurrent groups
+	wg.Add(10)		// 1min to run 65,000 ports on 10 concurrent groups
 	go check_port(host, start_port, end_port_set1)
 	go check_port(host, (end_port_set1 + 1), end_port_set2)
 	go check_port(host, (end_port_set2 + 1), end_port_set3)
