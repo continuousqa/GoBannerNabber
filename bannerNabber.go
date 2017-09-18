@@ -5,8 +5,11 @@ package main
 import (
 	"fmt"
 	"net"
-	"time"
+	"os"
+	"runtime"
+	"strings"
 	"sync"
+	"time"
 )
 
 var host string
@@ -15,29 +18,6 @@ var end_port int
 var wg sync.WaitGroup
 
 func main() {
-	user_input()
-}
-
-func check_port(host string, start_port, end_port int) {
-
-	for i := start_port; i <= end_port; i++ {
-		//fmt.Println('\n')
-		qualified_host := fmt.Sprintf("%s%s%d", host, ":", i)
-		conn, err := net.DialTimeout("tcp", qualified_host, 10*time.Millisecond)  // Got the timeout code from: https://stackoverflow.com/questions/37294052/golang-why-net-dialtimeout-get-timeout-half-of-the-time
-		if err != nil {
-			continue
-		}
-		fmt.Fprintf(conn, "GET / HTTP/1.0\r\n\r\n1\n22\n\n\n\n")
-		conn.SetReadDeadline(time.Now().Add(10*time.Millisecond))
-
-		buff := make([]byte, 1024)
-		n, _ := conn.Read(buff)
-		fmt.Printf("Port: %d%s\n",i, buff[:n])
-	}
-	wg.Done()
-}
-
-func user_input() {
 	fmt.Println("Host> ")
 	fmt.Scan(&host)
 	fmt.Println("Starting Port (i.e. 80)> ")
@@ -46,29 +26,63 @@ func user_input() {
 	fmt.Scan(&end_port)
 	fmt.Println("Running scan... ")
 
-	port_range := end_port - start_port
-	end_port_set1 := (port_range / 10) + start_port
-	end_port_set2 := (port_range / 10) + end_port_set1
-	end_port_set3 := (port_range / 10) + end_port_set2
-	end_port_set4 := (port_range / 10) + end_port_set3
-	end_port_set5 := (port_range / 10) + end_port_set4
-	end_port_set6 := (port_range / 10) + end_port_set5
-	end_port_set7 := (port_range / 10) + end_port_set6
-	end_port_set8 := (port_range / 10) + end_port_set7
-	end_port_set9 := (port_range / 10) + end_port_set8
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
+	numberOfPorts := (end_port - start_port) + 1
+	if numberOfPorts < 1 {
+		fmt.Println("No ports to scan")
+		os.Exit(1)
+	}
+	portsToScan := make(chan int, numberOfPorts)
 
-	wg.Add(10)		// 1min to run 65,000 ports on 10 concurrent groups
-	go check_port(host, start_port, end_port_set1)
-	go check_port(host, (end_port_set1 + 1), end_port_set2)
-	go check_port(host, (end_port_set2 + 1), end_port_set3)
-	go check_port(host, (end_port_set3 + 1), end_port_set4)
-	go check_port(host, (end_port_set4 + 1), end_port_set5)
-	go check_port(host, (end_port_set5 + 1), end_port_set6)
-	go check_port(host, (end_port_set6 + 1), end_port_set7)
-	go check_port(host, (end_port_set7 + 1), end_port_set8)
-	go check_port(host, (end_port_set8 + 1), end_port_set9)
-	go check_port(host, (end_port_set9 + 1), end_port)
+	go func() {
+		for i := start_port; i <= end_port; i++ {
+			portsToScan <- i
+		}
+		close(portsToScan)
+	}()
+
+	scanners := runtime.NumCPU() * 8
+	if scanners > numberOfPorts {
+		scanners = numberOfPorts
+	}
+
+	fmt.Printf("Running %d scanners on %d cores with %d ports\n", scanners, runtime.NumCPU(), numberOfPorts)
+	for i := 0; i < scanners; i++ {
+		wg.Add(1)
+		go checkPort(i, host, portsToScan)
+	}
 	wg.Wait()
+}
 
+func checkPort(id int, host string, ports <-chan int) {
+	for port := range ports {
+		qualified_host := fmt.Sprintf("%s%s%d", host, ":", port)
+		// give the connection time to setup. Local port scan works quick but over the internet takes longer
+		conn, err := net.DialTimeout("tcp", qualified_host, 1*time.Second) // Got the timeout code from: https://stackoverflow.com/questions/37294052/golang-why-net-dialtimeout-get-timeout-half-of-the-time
+		if err != nil {
+			if strings.HasSuffix(err.Error(), "too many open files") {
+				fmt.Printf("You started too many workers! Unable to open a connection. Increase the number of open files on your OS\n")
+				continue
+			}
+			if strings.HasSuffix(err.Error(), "connection refused") {
+				//fmt.Printf("Worker: %d, Port: %d%s\n", id, port, "closed")
+				continue
+			}
+			if strings.HasSuffix(err.Error(), "i/o timeout") {
+				//fmt.Printf("Worker: %d, Port: %d%s\n", id, port, "timeout")
+				continue
+			}
+			fmt.Println(err)
+			continue
+		}
+		fmt.Fprintf(conn, "GET / HTTP/1.1\r\nHost: %s\r\n\r\n", host)
+		// data travel takes time so we give it 300ms to arrive
+		conn.SetReadDeadline(time.Now().Add(300 * time.Millisecond))
+
+		buff := make([]byte, 60)
+		n, _ := conn.Read(buff)
+		fmt.Printf("Worker: #%d, Port: %d Output: %s\n", id, port, strings.Replace(string(buff[:n]), "\r\n", " ", -1))
+	}
+	wg.Done()
 }
